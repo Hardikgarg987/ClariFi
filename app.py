@@ -48,8 +48,9 @@ def enhance():
             seg_snr=f"{seg_snr:.2f}",
             pesq_val=f"{pesq_val:.2f}",
             stoi_val=f"{stoi_val:.2f}",
-            spectrogram_img=url_for('static', filename=f'spectrograms/enhanced_{filename[:-4]}_spectrogram.png')
+            spectrogram_path=spectrogram_path
         )
+
     return "Invalid file type", 400
 
 if __name__ == '__main__':

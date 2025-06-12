@@ -8,3 +8,4 @@ __pycache__/
 # Ignore uploaded and enhanced files
 static/uploads/*
 static/enhanced/*
+static/spectrograms/*

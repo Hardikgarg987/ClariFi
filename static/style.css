@@ -1,49 +1,93 @@
+/* static/style.css */
+
 body {
     font-family: 'Poppins', sans-serif;
-    background: #f5f7fa;
+    background-color: #f4f6f8;
+    color: #333;
     margin: 0;
-    padding: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-}
-
-.container {
-    text-align: center;
-    background: #fff;
-    padding: 40px;
-    border-radius: 12px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-    width: 90%;
-    max-width: 500px;
+    padding: 2rem;
+    line-height: 1.6;
 }
 
 h1 {
-    color: #D72638; /* ClariFi red */
-    margin-bottom: 10px;
+    color: #2d3748;
+    text-align: center;
+    margin-bottom: 2rem;
 }
 
-p {
-    margin-bottom: 30px;
-    color: #555;
+form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 2rem;
 }
 
 input[type="file"] {
-    margin-bottom: 20px;
+    padding: 0.5rem;
 }
 
 button {
-    background: #D72638;
-    color: white;
+    padding: 0.7rem 1.5rem;
+    background-color: #4a90e2;
     border: none;
-    padding: 12px 24px;
-    font-size: 16px;
-    border-radius: 6px;
+    color: white;
+    border-radius: 5px;
     cursor: pointer;
-    transition: background 0.3s;
+    font-size: 1rem;
 }
 
 button:hover {
-    background: #b91c2a;
+    background-color: #357ABD;
+}
+
+.audio-section,
+.metrics-section,
+.spectrogram-section {
+    max-width: 800px;
+    margin: 2rem auto;
+    padding: 1rem 2rem;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+h2 {
+    color: #4a4a4a;
+    margin-top: 0;
+}
+
+audio {
+    width: 100%;
+    margin-top: 1rem;
+}
+
+ul {
+    list-style-type: none;
+    padding-left: 0;
+}
+
+li {
+    padding: 0.3rem 0;
+    font-size: 1.1rem;
+}
+
+img {
+    width: 100%;
+    margin-top: 1rem;
+    border-radius: 6px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+a {
+    display: block;
+    text-align: center;
+    margin-top: 2rem;
+    text-decoration: none;
+    color: #4a90e2;
+    font-weight: bold;
+}
+
+a:hover {
+    color: #357ABD;
 }
