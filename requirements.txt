@@ -1,8 +1,10 @@
-numpy
+Flask
+gunicorn
 librosa
-matplotlib
-tensorflow
-scipy
+numpy
 soundfile
-pesq
+tensorflow
+scikit-learn
+matplotlib
 pystoi
+pesq
