@@ -3,49 +3,8 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>ClariFi - Speech Enhancement</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f7f8;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-            margin: 0;
-        }
-
-        h1 {
-            color: #2c3e50;
-        }
-
-        form {
-            background-color: #fff;
-            padding: 20px 30px;
-            border-radius: 10px;
-            box-shadow: 0 0 15px rgba(0,0,0,0.1);
-            text-align: center;
-        }
-
-        input[type="file"] {
-            margin-bottom: 20px;
-        }
-
-        button {
-            background-color: #3498db;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 16px;
-        }
-
-        button:hover {
-            background-color: #2980b9;
-        }
-    </style>
+    <title>ClariFi - Upload Audio</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
     <h1>🔊 ClariFi - Speech Enhancement</h1>
