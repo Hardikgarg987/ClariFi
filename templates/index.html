@@ -1,0 +1,15 @@
+<!-- templates/index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>ClariFi - Upload Audio</title>
+</head>
+<body>
+    <h1>ClariFi - Speech Enhancement</h1>
+    <form action="/enhance" method="post" enctype="multipart/form-data">
+        <input type="file" name="audiofile" accept=".wav" required>
+        <button type="submit">Enhance Audio</button>
+    </form>
+</body>
+</html>

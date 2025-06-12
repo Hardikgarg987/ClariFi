@@ -1,31 +1,53 @@
-# app.py
-
-from flask import Flask, request, jsonify
-from werkzeug.utils import secure_filename
+from flask import Flask, request, render_template, url_for
+from enhance import enhance_audio
 import os
 
-from enhance import enhance_audio
-
-UPLOAD_FOLDER = 'uploads/'
 app = Flask(__name__)
+
+# Configuration
+UPLOAD_FOLDER = 'static/uploads'
+ENHANCED_FOLDER = 'static/enhanced'
+ALLOWED_EXTENSIONS = {'wav'}
+
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+app.config['ENHANCED_FOLDER'] = ENHANCED_FOLDER
 
-@app.route("/enhance", methods=['POST'])
+os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+os.makedirs(ENHANCED_FOLDER, exist_ok=True)
+
+# File validation
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+# Home page: Upload Form
+@app.route('/')
+def index():
+    return render_template('index.html')
+
+# Handle Upload and Enhancement
+@app.route('/enhance', methods=['POST'])
 def enhance():
-    if 'file' not in request.files:
-        return jsonify({"error": "No file provided"}), 400
+    if 'audiofile' not in request.files:
+        return "No file uploaded", 400
+    file = request.files['audiofile']
 
-    file = request.files['file']
-    filename = secure_filename(file.filename)
-    path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+    if file and allowed_file(file.filename):
+        filename = file.filename
+        input_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+        output_path = os.path.join(app.config['ENHANCED_FOLDER'], 'enhanced_' + filename)
 
-    os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
-    file.save(path)
+        # Save uploaded file
+        file.save(input_path)
 
-    output_path = f"outputs/enhanced_{filename}"
-    enhance_audio(path, output_path)
+        # Enhance audio using your backend
+        enhance_audio(input_path, output_path=output_path)
 
-    return jsonify({"message": "Audio enhanced", "output": output_path})
+        return render_template('result.html',
+                               original_file=url_for('static', filename=f'uploads/{filename}'),
+                               enhanced_file=url_for('static', filename=f'enhanced/enhanced_{filename}'))
 
-if __name__ == "__main__":
+    return "Invalid file type", 400
+
+
+if __name__ == '__main__':
     app.run(debug=True)
