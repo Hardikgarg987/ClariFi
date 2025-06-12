@@ -73,3 +73,25 @@ ClariFi/
 ```
 
 ---
+
+## 📷 Screenshots
+
+<p float="left">
+  <img src="static/screenshot_upload.png" width="400"/>
+  <img src="static/screenshot_result.png" width="400"/>
+  <img src="static/screenshot_result.png" width="400"/>
+</p>
+
+---
+
+## 📜 License
+
+MIT License. See [LICENSE](LICENSE) for details.
+
+---
+
+## 🙌 Acknowledgments
+
+- VoiceBank-DEMAND Dataset  
+- PESQ & STOI evaluation packages  
+- TensorFlow & Librosa
