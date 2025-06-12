@@ -96,3 +96,11 @@ MIT License. See [LICENSE](LICENSE) for details.
 - VoiceBank-DEMAND Dataset  
 - PESQ & STOI evaluation packages  
 - TensorFlow & Librosa
+
+---
+
+## 👤 Author
+
+**Hardik Garg**  
+📧 hardikgarg987@gmail.com
+🐙 GitHub: [https://github.com/Hardikgarg987](https://github.com/Hardikgarg987)
