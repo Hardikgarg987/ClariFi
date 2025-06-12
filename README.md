@@ -1,4 +1,4 @@
-# 🎧 ClariFi: Deep Speech Enhancement Web App
+# 🎧 ClariFi: Speech Enhancement Web App
 
 ClariFi is a simple, effective speech enhancement system built using deep learning and STFT-based features. It denoises `.wav` audio files using a trained neural network and provides audio quality metrics like PESQ, STOI, and segmental SNR.
 
@@ -21,7 +21,18 @@ ClariFi is a simple, effective speech enhancement system built using deep learni
 
 ```bash
 git clone https://github.com/your-username/ClariFi.git
+```
+
+#### 2. Navigate into the project directory:
+
+```bash
 cd ClariFi
+```
+
+#### 3. Install dependencies:
+
+```bash
+pip install -r requirements.txt
 ```
 
 # 🎧 ClariFi – Speech Enhancement using DNN
@@ -40,7 +51,6 @@ A deep learning-based speech enhancement app that denoises audio using a frame-w
 
 ## 📁 Project Structure
 
-```
 ClariFi/
 ├── app.py # Flask web app
 ├── enhance.py # Enhancement + metrics logic
@@ -59,6 +69,3 @@ ClariFi/
 ├── preprocess.py
 ├── audio_utils.py
 └── metrics.py
-```
-
----
