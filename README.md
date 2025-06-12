@@ -51,6 +51,7 @@ A deep learning-based speech enhancement app that denoises audio using a frame-w
 
 ## 📁 Project Structure
 
+```
 ClariFi/
 ├── app.py # Flask web app
 ├── enhance.py # Enhancement + metrics logic
@@ -69,3 +70,6 @@ ClariFi/
 ├── preprocess.py
 ├── audio_utils.py
 └── metrics.py
+```
+
+---
