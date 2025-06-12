@@ -55,25 +55,29 @@ def enhance_audio(noisy_file, output_path="outputs/enhanced.wav"):
     print(f"🎧 PESQ: {pesq_val:.2f}")
     print(f"🗣️ STOI: {stoi_val:.2f}")
 
-    return seg_snr, pesq_val, stoi_val
-
-    # Plot
+    # Save spectrogram image
     plt.figure(figsize=(12, 5))
     plt.subplot(1, 2, 1)
     librosa.display.specshow(librosa.amplitude_to_db(np.abs(stft_noisy), ref=np.max),
-                             sr=SR, hop_length=HOP_LENGTH, y_axis='log', x_axis='time')
+                            sr=SR, hop_length=HOP_LENGTH, y_axis='log', x_axis='time')
     plt.title("Input Noisy Spectrogram")
     plt.colorbar()
 
     plt.subplot(1, 2, 2)
     enhanced_stft = librosa.stft(enhanced_audio, n_fft=512, hop_length=HOP_LENGTH)
     librosa.display.specshow(librosa.amplitude_to_db(np.abs(enhanced_stft), ref=np.max),
-                             sr=SR, hop_length=HOP_LENGTH, y_axis='log', x_axis='time')
+                            sr=SR, hop_length=HOP_LENGTH, y_axis='log', x_axis='time')
     plt.title("Enhanced Spectrogram")
     plt.colorbar()
 
+    os.makedirs("static/spectrograms", exist_ok=True)
+    spectrogram_path = f"static/spectrograms/{os.path.basename(output_path).split('.')[0]}_spectrogram.png"
     plt.tight_layout()
-    plt.show()
+    plt.savefig(spectrogram_path)
+    plt.close()
+
+    # Final return
+    return seg_snr, pesq_val, stoi_val, spectrogram_path
 
 if __name__ == "__main__":
     enhance_audio("dataset/noisy/p232_023.wav")

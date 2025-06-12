@@ -40,14 +40,16 @@ def enhance():
         file.save(input_path)
 
         # Enhance and get metrics
-        seg_snr, pesq_val, stoi_val = enhance_audio(input_path, output_path=output_path)
+        seg_snr, pesq_val, stoi_val, spectrogram_path = enhance_audio(input_path, output_path=output_path)
 
         return render_template('result.html',
             original_file=url_for('static', filename=f'uploads/{filename}'),
             enhanced_file=url_for('static', filename=f'enhanced/enhanced_{filename}'),
             seg_snr=f"{seg_snr:.2f}",
             pesq_val=f"{pesq_val:.2f}",
-            stoi_val=f"{stoi_val:.2f}")
+            stoi_val=f"{stoi_val:.2f}",
+            spectrogram_img=url_for('static', filename=f'spectrograms/enhanced_{filename[:-4]}_spectrogram.png')
+        )
     return "Invalid file type", 400
 
 if __name__ == '__main__':
