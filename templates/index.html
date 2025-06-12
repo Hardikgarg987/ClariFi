@@ -1,17 +1,19 @@
-<!-- templates/index.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>ClariFi - Upload Audio</title>
+    <title>ClariFi - Speech Enhancement</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
 </head>
 <body>
-    <h1>🔊 ClariFi - Speech Enhancement</h1>
-    <form action="/enhance" method="post" enctype="multipart/form-data">
-        <input type="file" name="audiofile" accept=".wav" required>
-        <br>
-        <button type="submit">✨ Enhance Audio</button>
-    </form>
+    <div class="container">
+        <h1>🎧 ClariFi</h1>
+        <p>Upload a noisy WAV file and get a cleaner version using our DNN-based enhancement model.</p>
+        <form action="/enhance" method="post" enctype="multipart/form-data">
+            <input type="file" name="audiofile" accept=".wav" required>
+            <button type="submit">✨ Enhance Audio</button>
+        </form>
+    </div>
 </body>
 </html>

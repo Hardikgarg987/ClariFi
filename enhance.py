@@ -55,6 +55,8 @@ def enhance_audio(noisy_file, output_path="outputs/enhanced.wav"):
     print(f"🎧 PESQ: {pesq_val:.2f}")
     print(f"🗣️ STOI: {stoi_val:.2f}")
 
+    return seg_snr, pesq_val, stoi_val
+
     # Plot
     plt.figure(figsize=(12, 5))
     plt.subplot(1, 2, 1)

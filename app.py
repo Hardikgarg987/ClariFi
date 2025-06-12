@@ -1,4 +1,4 @@
-from flask import Flask, request, render_template, url_for
+from flask import Flask, render_template, request, url_for
 from enhance import enhance_audio
 import os
 
@@ -36,18 +36,19 @@ def enhance():
         input_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
         output_path = os.path.join(app.config['ENHANCED_FOLDER'], 'enhanced_' + filename)
 
-        # Save uploaded file
+        # Save file
         file.save(input_path)
 
-        # Enhance audio using your backend
-        enhance_audio(input_path, output_path=output_path)
+        # Enhance and get metrics
+        seg_snr, pesq_val, stoi_val = enhance_audio(input_path, output_path=output_path)
 
         return render_template('result.html',
-                               original_file=url_for('static', filename=f'uploads/{filename}'),
-                               enhanced_file=url_for('static', filename=f'enhanced/enhanced_{filename}'))
-
+            original_file=url_for('static', filename=f'uploads/{filename}'),
+            enhanced_file=url_for('static', filename=f'enhanced/enhanced_{filename}'),
+            seg_snr=f"{seg_snr:.2f}",
+            pesq_val=f"{pesq_val:.2f}",
+            stoi_val=f"{stoi_val:.2f}")
     return "Invalid file type", 400
-
 
 if __name__ == '__main__':
     app.run(debug=True)

@@ -2,27 +2,37 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>ClariFi - Upload Audio</title>
+    <title>ClariFi - Results</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
 </head>
-
 <body>
-    <h1>ClariFi - Enhanced Audio</h1>
+    <div class="container">
+        <h1>✨ ClariFi Results</h1>
+        <p>Here’s your enhanced speech output. Compare the original and the enhanced audio below:</p>
 
-    <h3>🔊 Original Audio</h3>
-    <audio controls>
-        <source src="{{ original_file }}" type="audio/wav">
-        Your browser does not support the audio element.
-    </audio>
+        <h3>🔊 Original Audio</h3>
+        <audio controls>
+            <source src="{{ original_file }}" type="audio/wav">
+            Your browser does not support the audio element.
+        </audio>
 
-    <h3>🎧 Enhanced Audio</h3>
-    <audio controls>
-        <source src="{{ enhanced_file }}" type="audio/wav">
-        Your browser does not support the audio element.
-    </audio>
+        <h3>🎧 Enhanced Audio</h3>
+        <audio controls>
+            <source src="{{ enhanced_file }}" type="audio/wav">
+            Your browser does not support the audio element.
+        </audio>
 
-    <br><br>
-    <a href="/">⬅️ Enhance another audio file</a>
+        <div class="metrics">
+            <h3>📊 Enhancement Metrics</h3>
+            <ul>
+                <li><strong>Segmental SNR:</strong> {{ seg_snr }} dB</li>
+                <li><strong>PESQ:</strong> {{ pesq_val }}</li>
+                <li><strong>STOI:</strong> {{ stoi_val }}</li>
+            </ul>
+        </div>
+
+        <a href="/" class="button">🔁 Try Another File</a>
+    </div>
 </body>
 </html>
