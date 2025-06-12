@@ -15,23 +15,20 @@ from utils.metrics import segmental_snr, compute_pesq, compute_stoi
 MODEL_PATH = "models/frame_model.h5"
 NORM_PATH = "models/norm.pkl"
 
+# ✅ Load once at module load
+print("🔁 Loading model and normalization data...")
+model = load_model(MODEL_PATH, compile=False)
+with open(NORM_PATH, 'rb') as f:
+    norm_data = pickle.load(f)
+mean = norm_data['mean']
+std = norm_data['std']
+
 def enhance_audio(noisy_file, output_path="outputs/enhanced.wav"):
-    # Load model and normalization
-    model = load_model(MODEL_PATH, compile=False)
-    with open(NORM_PATH, 'rb') as f:
-        norm_data = pickle.load(f)
-
-    mean = norm_data['mean']
-    std = norm_data['std']
-
-    # File paths
     clean_file = noisy_file.replace("noisy", "clean")
 
-    # Extract features
     noisy_feats, y_noisy, stft_noisy = extract_features(noisy_file)
     clean_feats, _, _ = extract_features(clean_file)
 
-    # Normalize and predict
     norm_noisy = (noisy_feats - mean) / std
     enhanced_frames = model.predict(norm_noisy)
     enhanced_frames = (enhanced_frames * std) + mean
@@ -41,21 +38,14 @@ def enhance_audio(noisy_file, output_path="outputs/enhanced.wav"):
     enhanced_audio = apply_istft(mag, phase)
     enhanced_audio = butter_lowpass_filter(enhanced_audio)
 
-    # Save output
     os.makedirs(os.path.dirname(output_path), exist_ok=True)
     sf.write(output_path, enhanced_audio, SR)
     print(f"✅ Enhanced audio saved at: {output_path}")
 
-    # Metrics
     seg_snr = segmental_snr(y_noisy, enhanced_audio)
     pesq_val = compute_pesq(y_noisy, enhanced_audio)
     stoi_val = compute_stoi(y_noisy, enhanced_audio)
 
-    print(f"\n📊 Segmental SNR: {seg_snr:.2f} dB")
-    print(f"🎧 PESQ: {pesq_val:.2f}")
-    print(f"🗣️ STOI: {stoi_val:.2f}")
-
-    # Save spectrogram image
     plt.figure(figsize=(12, 5))
     plt.subplot(1, 2, 1)
     librosa.display.specshow(librosa.amplitude_to_db(np.abs(stft_noisy), ref=np.max),
@@ -76,8 +66,4 @@ def enhance_audio(noisy_file, output_path="outputs/enhanced.wav"):
     plt.savefig(spectrogram_path)
     plt.close()
 
-    # Final return
     return seg_snr, pesq_val, stoi_val, spectrogram_path
-
-if __name__ == "__main__":
-    enhance_audio("dataset/noisy/p232_023.wav")
