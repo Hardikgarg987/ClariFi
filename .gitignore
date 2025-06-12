@@ -4,3 +4,7 @@ outputs/
 __pycache__/
 .DS_Store
 .ipynb_checkpoints/
+
+# Ignore uploaded and enhanced files
+static/uploads/*
+static/enhanced/*
