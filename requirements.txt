@@ -1,0 +1,8 @@
+numpy
+librosa
+matplotlib
+tensorflow
+scipy
+soundfile
+pesq
+pystoi

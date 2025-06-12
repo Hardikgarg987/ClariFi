@@ -17,7 +17,7 @@ NORM_PATH = "models/norm.pkl"
 
 def enhance_audio(noisy_file, output_path="outputs/enhanced.wav"):
     # Load model and normalization
-    model = load_model(MODEL_PATH)
+    model = load_model(MODEL_PATH, compile=False)
     with open(NORM_PATH, 'rb') as f:
         norm_data = pickle.load(f)
 

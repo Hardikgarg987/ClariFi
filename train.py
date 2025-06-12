@@ -30,7 +30,7 @@ def train_model(clean_path, noisy_path):
 
     # Save model and normalization
     os.makedirs(MODEL_DIR, exist_ok=True)
-    model.save(MODEL_PATH)
+    model.save(MODEL_PATH, include_optimizer=False)
     with open(NORM_PATH, 'wb') as f:
         pickle.dump({'mean': mean, 'std': std}, f)
 
