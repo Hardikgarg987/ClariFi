@@ -6,16 +6,22 @@ import numpy as np
 import soundfile as sf
 import pickle
 import matplotlib.pyplot as plt
+import tensorflow as tf
 
 from tensorflow.keras.models import load_model
+from tensorflow.keras.backend import clear_session
+
 from utils.preprocess import extract_features
 from utils.audio_utils import apply_istft, butter_lowpass_filter, HOP_LENGTH, WINDOW_TYPE, SR
 from utils.metrics import segmental_snr, compute_pesq, compute_stoi
 
+# Configure TensorFlow to reduce memory usage
+tf.config.threading.set_inter_op_parallelism_threads(1)
+tf.config.threading.set_intra_op_parallelism_threads(1)
+
 MODEL_PATH = "models/frame_model.h5"
 NORM_PATH = "models/norm.pkl"
 
-# ✅ Load once at module load
 print("🔁 Loading model and normalization data...")
 model = load_model(MODEL_PATH, compile=False)
 with open(NORM_PATH, 'rb') as f:
@@ -30,7 +36,10 @@ def enhance_audio(noisy_file, output_path="outputs/enhanced.wav"):
     clean_feats, _, _ = extract_features(clean_file)
 
     norm_noisy = (noisy_feats - mean) / std
-    enhanced_frames = model.predict(norm_noisy)
+
+    # Suppress prediction logs
+    enhanced_frames = model.predict(norm_noisy, verbose=0)
+
     enhanced_frames = (enhanced_frames * std) + mean
     mag = librosa.db_to_amplitude(enhanced_frames.T)
 
@@ -46,6 +55,10 @@ def enhance_audio(noisy_file, output_path="outputs/enhanced.wav"):
     pesq_val = compute_pesq(y_noisy, enhanced_audio)
     stoi_val = compute_stoi(y_noisy, enhanced_audio)
 
+    os.makedirs("static/spectrograms", exist_ok=True)
+    spectrogram_path = f"static/spectrograms/{os.path.basename(output_path).split('.')[0]}_spectrogram.png"
+
+    # Plot safely and free memory
     plt.figure(figsize=(12, 5))
     plt.subplot(1, 2, 1)
     librosa.display.specshow(librosa.amplitude_to_db(np.abs(stft_noisy), ref=np.max),
@@ -60,10 +73,11 @@ def enhance_audio(noisy_file, output_path="outputs/enhanced.wav"):
     plt.title("Enhanced Spectrogram")
     plt.colorbar()
 
-    os.makedirs("static/spectrograms", exist_ok=True)
-    spectrogram_path = f"static/spectrograms/{os.path.basename(output_path).split('.')[0]}_spectrogram.png"
     plt.tight_layout()
     plt.savefig(spectrogram_path)
-    plt.close()
+    plt.clf()
+    plt.close('all')
+
+    clear_session()  # 🧠 Free up model memory between runs
 
     return seg_snr, pesq_val, stoi_val, spectrogram_path

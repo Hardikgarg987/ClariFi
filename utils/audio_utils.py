@@ -13,10 +13,18 @@ SR = 16000
 
 def butter_lowpass_filter(data, cutoff=4000, sr=SR, order=6):
     nyquist = 0.5 * sr
-    normal_cutoff = cutoff / nyquist
+    normal_cutoff = min(0.99, cutoff / nyquist)  # safety clamp
     b, a = butter(order, normal_cutoff, btype='low', analog=False)
-    return lfilter(b, a, data)
+    filtered = lfilter(b, a, data)
+    return np.clip(filtered, -1.0, 1.0)  # avoid overflow
 
 def apply_istft(mag, phase):
+    # Ensure mag and phase have same shape
+    if mag.shape != phase.shape:
+        min_t = min(mag.shape[1], phase.shape[1])
+        mag = mag[:, :min_t]
+        phase = phase[:, :min_t]
+
     stft_complex = mag * np.exp(1j * phase)
-    return librosa.istft(stft_complex, hop_length=HOP_LENGTH, window=WINDOW_TYPE)
+    signal = librosa.istft(stft_complex, hop_length=HOP_LENGTH, window=WINDOW_TYPE)
+    return np.clip(signal, -1.0, 1.0)  # normalize signal range

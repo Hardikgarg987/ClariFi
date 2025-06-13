@@ -7,7 +7,12 @@ import librosa
 from .audio_utils import N_FFT, HOP_LENGTH, WINDOW_TYPE, SR
 
 def extract_features(file_path, sr=SR):
-    y, _ = librosa.load(file_path, sr=sr)
+    try:
+        y, _ = librosa.load(file_path, sr=sr)
+    except Exception as e:
+        print(f"[Error] Failed to load {file_path}: {e}")
+        return None, None, None
+
     stft = librosa.stft(y, n_fft=N_FFT, hop_length=HOP_LENGTH, window=WINDOW_TYPE)
     mag = np.abs(stft)
     db = librosa.amplitude_to_db(mag)
@@ -24,6 +29,9 @@ def prepare_data(clean_path, noisy_path):
             clean_feats, _, _ = extract_features(clean_file)
             noisy_feats, _, _ = extract_features(noisy_file)
 
+            if clean_feats is None or noisy_feats is None:
+                continue
+
             min_len = min(clean_feats.shape[0], noisy_feats.shape[0])
             clean_feats = clean_feats[:min_len]
             noisy_feats = noisy_feats[:min_len]
@@ -31,11 +39,14 @@ def prepare_data(clean_path, noisy_path):
             X_frames.append(noisy_feats)
             Y_frames.append(clean_feats)
 
+    if not X_frames or not Y_frames:
+        raise RuntimeError("No valid audio pairs found in the dataset.")
+
     X = np.vstack(X_frames)
     Y = np.vstack(Y_frames)
 
     mean = np.mean(X)
-    std = np.std(X)
+    std = np.std(X) + 1e-8  # prevent divide-by-zero
     X_norm = (X - mean) / std
     Y_norm = (Y - mean) / std
 

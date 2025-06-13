@@ -1,6 +1,11 @@
 from flask import Flask, render_template, request, url_for
+from werkzeug.utils import secure_filename
 from enhance import enhance_audio
 import os
+import shutil
+import gc
+import traceback
+
 os.environ["CUDA_VISIBLE_DEVICES"] = "-1"
 
 app = Flask(__name__)
@@ -20,41 +25,53 @@ os.makedirs(ENHANCED_FOLDER, exist_ok=True)
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
-# Home page: Upload Form
 @app.route('/')
 def index():
     return render_template('index.html')
 
-# Handle Upload and Enhancement
 @app.route('/enhance', methods=['POST'])
 def enhance():
-    if 'audiofile' not in request.files:
-        return "No file uploaded", 400
-    file = request.files['audiofile']
+    try:
+        if 'audiofile' not in request.files:
+            return "❌ No file uploaded", 400
 
-    if file and allowed_file(file.filename):
-        filename = file.filename
-        input_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-        output_path = os.path.join(app.config['ENHANCED_FOLDER'], 'enhanced_' + filename)
+        file = request.files['audiofile']
 
-        # Save file
-        file.save(input_path)
+        if file and allowed_file(file.filename):
+            filename = secure_filename(file.filename)
 
-        # Enhance and get metrics
-        seg_snr, pesq_val, stoi_val, spectrogram_path = enhance_audio(input_path, output_path=output_path)
+            input_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+            output_path = os.path.join(app.config['ENHANCED_FOLDER'], f'enhanced_{filename}')
 
-        return render_template('result.html',
-            original_file=url_for('static', filename=f'uploads/{filename}'),
-            enhanced_file=url_for('static', filename=f'enhanced/enhanced_{filename}'),
-            seg_snr=f"{seg_snr:.2f}",
-            pesq_val=f"{pesq_val:.2f}",
-            stoi_val=f"{stoi_val:.2f}",
-            spectrogram_path=spectrogram_path
-        )
+            # Limit size: Reject files >15 sec (240k samples @ 16kHz)
+            file.seek(0, os.SEEK_END)
+            if file.tell() > 500000:  # ~500KB = ~15s mono
+                return "❌ File too large. Limit to 15 seconds.", 400
+            file.seek(0)
 
-    return "Invalid file type", 400
+            file.save(input_path)
+
+            # Enhance the audio
+            seg_snr, pesq_val, stoi_val, spectrogram_path = enhance_audio(input_path, output_path)
+
+            # Clean up memory after heavy processing
+            gc.collect()
+
+            return render_template('result.html',
+                original_file=url_for('static', filename=f'uploads/{filename}'),
+                enhanced_file=url_for('static', filename=f'enhanced/enhanced_{os.path.basename(output_path)}'),
+                seg_snr=f"{seg_snr:.2f}",
+                pesq_val=f"{pesq_val:.2f}",
+                stoi_val=f"{stoi_val:.2f}",
+                spectrogram_path=spectrogram_path
+            )
+
+        return "❌ Invalid file type", 400
+
+    except Exception as e:
+        traceback.print_exc()
+        return f"⚠️ Enhancement failed: {str(e)}", 500
 
 if __name__ == '__main__':
-    import os
     port = int(os.environ.get("PORT", 10000))
     app.run(host='0.0.0.0', port=port)
