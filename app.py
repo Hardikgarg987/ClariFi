@@ -59,7 +59,7 @@ def enhance():
 
             return render_template('result.html',
                 original_file=url_for('static', filename=f'uploads/{filename}'),
-                enhanced_file=url_for('static', filename=f'enhanced/enhanced_{os.path.basename(output_path)}'),
+                enhanced_file=url_for('static', filename=f'enhanced/enhanced_{filename}'),
                 seg_snr=f"{seg_snr:.2f}",
                 pesq_val=f"{pesq_val:.2f}",
                 stoi_val=f"{stoi_val:.2f}",
