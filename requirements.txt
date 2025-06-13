@@ -7,3 +7,6 @@ numpy
 soundfile
 scipy
 matplotlib
+pesq
+pystoi
+scikit-learn
