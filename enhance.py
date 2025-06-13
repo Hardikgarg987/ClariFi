@@ -1,6 +1,7 @@
 # enhance.py
 
 import os
+os.environ["CUDA_VISIBLE_DEVICES"] = "-1"  # ⛔ Disable GPU usage
 import librosa
 import numpy as np
 import soundfile as sf
