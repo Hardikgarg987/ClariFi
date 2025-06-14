@@ -29,6 +29,10 @@ def allowed_file(filename):
 def index():
     return render_template('index.html')
 
+@app.route('/health')
+def health():
+    return "OK", 200
+
 @app.route('/enhance', methods=['POST'])
 def enhance():
     try:
