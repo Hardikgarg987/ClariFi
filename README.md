@@ -6,11 +6,11 @@ ClariFi is a simple, effective speech enhancement system built using deep learni
 
 - 📤 Upload noisy `.wav` files
 - 🧠 Enhances audio using a trained DNN
-- 📊 Computes speech quality metrics:
+<!-- - 📊 Computes speech quality metrics:
   - Segmental SNR
   - PESQ
-  - STOI
-- 🎛 Visualizes noisy and enhanced spectrograms
+  - STOI -->
+<!-- - 🎛 Visualizes noisy and enhanced spectrograms -->
 - 🖥️ Clean and responsive web interface using Flask
 
 ---
@@ -80,7 +80,7 @@ ClariFi/
 
 <img src="static/screenshot_result.png" width="600"/>
 
-<img src="static/screenshot_result2.png" width="600"/>
+<!-- <img src="static/screenshot_result2.png" width="600"/> -->
 
 
 ---
@@ -94,7 +94,7 @@ MIT License. See [LICENSE](LICENSE) for details.
 ## 🙌 Acknowledgments
 
 - VoiceBank-DEMAND Dataset  
-- PESQ & STOI evaluation packages  
+<!-- - PESQ & STOI evaluation packages   -->
 - TensorFlow & Librosa
 
 ---

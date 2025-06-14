@@ -55,19 +55,16 @@ def enhance():
 
             file.save(input_path)
 
-            # Enhance the audio
-            seg_snr, pesq_val, stoi_val, spectrogram_path = enhance_audio(input_path, output_path)
+            # 🔁 Enhance the audio (Lite version)
+            enhance_audio(input_path, output_path)
 
-            # Clean up memory after heavy processing
+            # 🧹 Clean up memory
             gc.collect()
 
             return render_template('result.html',
                 original_file=url_for('static', filename=f'uploads/{filename}'),
-                enhanced_file=url_for('static', filename=f'enhanced/enhanced_{filename}'),
-                seg_snr=f"{seg_snr:.2f}",
-                pesq_val=f"{pesq_val:.2f}",
-                stoi_val=f"{stoi_val:.2f}",
-                spectrogram_path=spectrogram_path
+                enhanced_file=url_for('static', filename=f'enhanced/enhanced_{filename}')
+                # 🔕 No metrics or spectrogram in Lite version
             )
 
         return "❌ Invalid file type", 400
